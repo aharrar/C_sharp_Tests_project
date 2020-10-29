@@ -1,0 +1,298 @@
+﻿<UserControl x:Class="PLWPF.Show_dataSource"
+             xmlns:myBE="clr-namespace:BE;assembly=BE"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PLWPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" BorderThickness="1" BorderBrush="LightGray" Background="RoyalBlue">
+    <UserControl.Resources>
+        <local:bool2dimListDays x:Key="myConverterList"/>
+        <!--<local:boolCheckbox x:Key="myConverterCheck"/>-->
+    </UserControl.Resources>
+    <!--<UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="GetEnumGender">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="myBE:Gender"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>-->
+    
+    <Grid Name="mainGrid" Background="White" Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="269*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox Name="testErTrain" SelectedIndex="0" HorizontalContentAlignment="center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Center" Margin="3,0,3,0">
+            <ComboBoxItem Content="Select" HorizontalContentAlignment="Center"/>
+            <ComboBoxItem Content="Test" HorizontalContentAlignment="Center"/>
+            <ComboBoxItem Content="Tester" HorizontalContentAlignment="Center"/>
+            <ComboBoxItem Content="Trainee" HorizontalContentAlignment="Center"/>
+        </ComboBox>
+
+        <DataGrid VerticalAlignment="Stretch" x:Name="grid_dataSource_test" HeadersVisibility="Column" Grid.Row="1" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Style>
+                <Style TargetType="{x:Type DataGrid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Test">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Trainee">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Tester">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Select">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}" x:Key="IsEnabledStyle">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding isFinish}" Value="True">
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding isFinish}" Value="False">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="{x:Type CheckBox}" x:Key="centerCheckBox">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="auto" Header="Edit">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_edit_test" Content="Edit" Click="button_edit_test_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Width="auto" Header="Test Finished" Binding="{Binding isFinish, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource centerCheckBox}"/>
+                <DataGridCheckBoxColumn Width="auto" Header="Success" Binding="{Binding grade, UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource IsEnabledStyle}" ElementStyle="{StaticResource centerCheckBox}"/>
+                <DataGridTemplateColumn Width="auto" Header="Comment" CellStyle="{StaticResource IsEnabledStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Expander Name="exp_com_test" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <Popup Name="myPopup_com" StaysOpen="False">
+                                        <Popup.Style>
+                                            <Style>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}, Path=IsExpanded}" Value="True">
+                                                        <Setter Property="Popup.IsOpen" Value="True"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}, Path=IsExpanded}" Value="false">
+                                                        <Setter Property="Popup.IsOpen" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Popup.Style>
+                                        <Border Background="White" Height="73" Width="143" BorderThickness="3" BorderBrush="LightGray">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Text="{Binding comment, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="70" Width="140"/>
+                                            </Grid>
+                                        </Border>
+                                    </Popup>
+                                </StackPanel>
+                            </Expander>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="auto" Header="ID test" Binding="{Binding id_test}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="auto" Header="ID tester" Binding="{Binding ID_tester}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="auto" Header="ID trainee" Binding="{Binding ID_trainee}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="auto" Header="Date test" Binding="{Binding Date_test}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="auto" Header="Type car" Binding="{Binding typeCar}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="auto" Header="Start address" Binding="{Binding Address_test_start}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid VerticalAlignment="Stretch" Name="grid_dataSource_tester" HeadersVisibility="Column" Grid.Row="1" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Style>
+                <Style TargetType="{x:Type DataGrid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Tester">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Trainee">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Test">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Select">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="auto" Header="Edit">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_edit_tester" Content="Edit" Click="button_edit_tester_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto" Header="Remove">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_remove_tester" Content="Remove" Click="button_remove_tester_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto" Header="Work day">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_show_workday" Click="button_show_workday_Click">
+                                <StackPanel>
+                                    <Label Content="Work day" Margin="-6"/>
+                                    <Popup Name="myPopupWorkday" StaysOpen="False">
+                                        <DataGrid Name="dataGrid_WorkDay" ItemsSource="{Binding Work_day, Converter={StaticResource myConverterList}}" IsReadOnly="True"
+                                                  BorderBrush="LightGray" BorderThickness="1"/>
+                                    </Popup>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}"/>
+                <DataGridTextColumn Width="auto" Header="Last name" Binding="{Binding LastName}"/>
+                <DataGridTextColumn Width="auto" Header="First name" Binding="{Binding FirstName}"/>
+                <DataGridTextColumn Width="auto" Header="Birthday" Binding="{Binding BirthDay, StringFormat=d}"/>
+                <DataGridTextColumn Width="auto" Header="Phone" Binding="{Binding Phone}"/>
+                <DataGridTextColumn Width="auto" Header="Address" Binding="{Binding address}"/>
+                <DataGridTextColumn Width="auto" Header="Experience" Binding="{Binding Xp}"/>
+                <DataGridTextColumn Width="auto" Header="Max test" Binding="{Binding Max_test}"/>
+                <DataGridTextColumn Width="auto" Header="Type car" Binding="{Binding Type_car}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid VerticalAlignment="Stretch" HeadersVisibility="Column" x:Name="grid_dataSource_trainee"  Grid.Row="1" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Style>
+                <Style TargetType="{x:Type DataGrid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Trainee">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Test">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Tester">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Select">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="auto" Header="Edit">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_edit_trainee" Content="Edit" Click="button_edit_trainee_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto" Header="Remove">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="button_remove_trainee" Content="Remove" Click="button_remove_trainee_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}"/>
+                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Width="auto" Header="Gender" Binding="{Binding gender}"/>
+                <!--<DataGridComboBoxColumn Width="auto" Header="gender" ItemsSource="{Binding Source={StaticResource GetEnumGender}}" SelectedValueBinding="{Binding gender}" />-->
+                <DataGridTextColumn Width="auto" Header="Birthday" Binding="{Binding BirthDay, StringFormat=d}"/>
+                <!--<DataGridTemplateColumn Width="auto" Header="Birthday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding BirthDay}" IsEnabled=""/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+                <DataGridTextColumn Width="auto" Header="Phone" Binding="{Binding Phone}"/>
+                <DataGridTextColumn Width="auto" Header="Address" Binding="{Binding address}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <Grid VerticalAlignment="Stretch" x:Name="grid_Select"  Grid.Row="1">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Trainee">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Test">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Tester">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=testErTrain, Path=SelectedValue.Content}" Value="Select">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid VerticalAlignment="Stretch" HeadersVisibility="Column" x:Name="grid_Select_Grouping" ItemsSource="{Binding}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}"/>
+                    <DataGridTextColumn Width="auto" Header="Last name" Binding="{Binding LastName}"/>
+                    <DataGridTextColumn Width="auto" Header="First name" Binding="{Binding FirstName}"/>
+                    <DataGridTextColumn Width="auto" Header="Address" Binding="{Binding address}"/>
+                    <DataGridTextColumn Width="auto" Header="Type car" Binding="{Binding Type_car}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="RoyalBlue" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Group by type of car:" Foreground="RoyalBlue" HorizontalAlignment="Center"/>
+                        <Label Content="Ordered(if not then descending):" Foreground="RoyalBlue" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <CheckBox Name="TypeCar_check" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <ComboBox Name="groupTypeCar" SelectionChanged="groupTypeCar_SelectionChanged" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ComboBoxItem Content="Car" HorizontalContentAlignment="Center"/>
+                            <ComboBoxItem Content="Motorbike" HorizontalContentAlignment="Center"/>
+                            <ComboBoxItem Content="Truck" HorizontalContentAlignment="Center"/>
+                            <ComboBoxItem Content="Van" HorizontalContentAlignment="Center"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="1" BorderBrush="RoyalBlue" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Group by City:" Foreground="RoyalBlue" HorizontalAlignment="Center"/>
+                        <Label Content="Ordered(if not then descending):" Foreground="RoyalBlue" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <CheckBox Name="Add_check" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <ComboBox Name="groupAddress" ItemsSource="{Binding}" SelectionChanged="groupAddress_SelectionChanged" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

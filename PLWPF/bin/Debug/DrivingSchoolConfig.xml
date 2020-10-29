@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SavedLists xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ListTest>
+    <Test>
+      <id_test>00000001</id_test>
+      <ID_tester>222222223</ID_tester>
+      <ID_trainee>222222222</ID_trainee>
+      <Date_test>2019-06-16T18:00:00</Date_test>
+      <typeCar>Car</typeCar>
+      <Address_test_start>
+        <City>jerusalem</City>
+        <Num>44</Num>
+        <Street>pisga</Street>
+      </Address_test_start>
+      <Address_test_end>
+        <City>e</City>
+        <Num>2</Num>
+        <Street>e</Street>
+      </Address_test_end>
+      <isFinish>false</isFinish>
+      <grade>false</grade>
+      <comment />
+    </Test>
+  </ListTest>
+  <ListTrainee>
+    <Trainee>
+      <ID>222222222</ID>
+      <Name>é</Name>
+      <BirthDay>1975-07-18T00:00:00</BirthDay>
+      <gender>Female</gender>
+      <Phone>0586737838</Phone>
+      <address>
+        <City>jerusalem</City>
+        <Num>45</Num>
+        <Street>pisga</Street>
+      </address>
+    </Trainee>
+  </ListTrainee>
+  <ListTester>
+    <Tester>
+      <ID>222222223</ID>
+      <LastName>s</LastName>
+      <FirstName>s</FirstName>
+      <BirthDay>1975-07-18T00:00:00</BirthDay>
+      <Phone>0586737838</Phone>
+      <Xp>4</Xp>
+      <Max_test>3</Max_test>
+      <Type_car>Car</Type_car>
+      <address>
+        <City>jerusalem</City>
+        <Num>45</Num>
+        <Street>pisga</Street>
+      </address>
+      <workedHoursToString>0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;</workedHoursToString>
+    </Tester>
+  </ListTester>
+</SavedLists>
